@@ -11,5 +11,5 @@ sudo sed 's/AllowOverride None/AllowOverride All/' /etc/apache2/sites-available/
 sudo service apache2 restart
 mysql -u root -pyour_password < /vagrant/setup.sql
 export PATH="$PATH:/vagrant/lib/Cake/Console"
-cake -app /vagrant/app schema create
-mysql -u root -pyour_password < /vagrant/users.sql
+cake -app /vagrant/app schema create -y
+mysql -u root -pyour_password scoregame < /vagrant/users.sql
