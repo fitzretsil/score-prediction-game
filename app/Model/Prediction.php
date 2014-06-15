@@ -25,6 +25,36 @@ class Prediction extends AppModel {
 			),
 		),
 	);
+	
+	public $virtualFields = array(
+			'winner' => 'IF(team1_score > team2_score, "team1", IF(team1_score < team2_score, "team2", "draw"))',
+			'score' => 'CONCAT(team1_score, " - ", team2_score)',
+// 			'points' => 'IF(
+// 				CONCAT(team1_score, " - ", team2_score) = CONCAT(Match.team1_result, " - ", Match.team2_result), 
+// 				3, 
+// 				IF(
+// 					IF(
+// 						team1_score > team2_score, 
+// 						"team1", 
+// 						IF(
+// 							team1_score < team2_score, 
+// 							"team2", 
+// 							"draw"
+// 						)
+// 					) = IF(
+// 						Match.team1_result > Match.team2_result, 
+// 						"team1", 
+// 						IF(
+// 							Match.team1_result < Match.team2_result, 
+// 							"team2", 
+// 							"draw"
+// 						)
+// 					), 
+// 					1, 
+// 					0
+// 				)
+// 			)'
+	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -49,4 +79,20 @@ class Prediction extends AppModel {
 			'order' => ''
 		)
 	);
+	
+	public function afterFind($results, $primary = false) {
+		parent::afterFind($results, $primary);
+		if ( $primary ) {
+			for ($i = 0; $i < sizeOf($results); $i++) {
+				if ( $results[$i]['Prediction']['score'] == $results[$i]['Match']['result'] ) {
+					$results[$i]['Prediction']['points'] = 3;
+				} elseif( $results[$i]['Prediction']['winner'] == $results[$i]['Match']['winner']) {
+					$results[$i]['Prediction']['points'] = 1;
+				} else {
+					$results[$i]['Prediction']['points'] = 0;
+				}
+			}
+		}
+		return $results;
+	}
 }

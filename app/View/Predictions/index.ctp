@@ -2,26 +2,22 @@
 	<h2><?php echo __('Predictions'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('user_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('match_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('team1_score'); ?></th>
-			<th><?php echo $this->Paginator->sort('team2_score'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
+			<th><?php echo $this->Paginator->sort('score'); ?></th>
+			<th><?php echo $this->Paginator->sort('Match.result'); ?></th>
+			<th><?php echo $this->Paginator->sort('points'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($predictions as $prediction): ?>
 	<tr>
-		<td><?php echo h($prediction['Prediction']['id']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($prediction['User']['id'], array('controller' => 'users', 'action' => 'view', $prediction['User']['id'])); ?>
+			<?php echo $this->Html->link($prediction['User']['username'], array('controller' => 'users', 'action' => 'view', $prediction['User']['id'])); ?>
 		</td>
-		<td><?php echo h($prediction['Prediction']['match_id']); ?>&nbsp;</td>
-		<td><?php echo h($prediction['Prediction']['team1_score']); ?>&nbsp;</td>
-		<td><?php echo h($prediction['Prediction']['team2_score']); ?>&nbsp;</td>
-		<td><?php echo h($prediction['Prediction']['created']); ?>&nbsp;</td>
-		<td><?php echo h($prediction['Prediction']['modified']); ?>&nbsp;</td>
+		<td><?php echo h($prediction['Match']['title']); ?>&nbsp;</td>
+		<td><?php echo h($prediction['Prediction']['score']); ?>&nbsp;</td>
+		<td><?php echo h($prediction['Match']['result']); ?>&nbsp;</td>
+		<td><?php echo h($prediction['Prediction']['points']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $prediction['Prediction']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $prediction['Prediction']['id'])); ?>

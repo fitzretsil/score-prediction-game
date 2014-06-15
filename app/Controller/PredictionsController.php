@@ -55,8 +55,11 @@ class PredictionsController extends AppController {
 				$this->Session->setFlash(__('The prediction could not be saved. Please, try again.'));
 			}
 		}
-		$users = $this->Prediction->User->find('list');
-		$this->set(compact('users'));
+		$this->Prediction->virtualFields += $this->Prediction->Match->virtualFields;
+		
+		$users = $this->Prediction->User->find('list', array('fields' => array('User.id', 'User.username')));
+		$matches = $this->Prediction->Match->find('list', array('fields' => array('Match.id', 'Match.title')));
+		$this->set(compact('users','matches'));
 	}
 
 /**

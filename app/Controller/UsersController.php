@@ -21,7 +21,7 @@ class UsersController extends AppController {
  * @return void
  */
 	public function index() {
-		$this->User->recursive = 0;
+		$this->User->recursive = 4;
 		$this->set('users', $this->Paginator->paginate());
 	}
 
@@ -115,6 +115,14 @@ class UsersController extends AppController {
 			}
 			$this->Session->setFlash(__('Invalid username or password, try again'));
 		}
+	}
+	
+	public function isAuthorized($user) {
+		// Admin can access every action
+		if (isset($user['role']) && ( $this->action === 'index' || $this->action === 'view' ) ) {
+			return true;
+		}
+		parent::isAuthorized($user);
 	}
 	
 	public function logout() {

@@ -54,6 +54,12 @@ class Match extends AppModel {
 			),
 		),
 	);
+	
+	public $virtualFields = array(
+			'title' => 'CONCAT(Match.team1, " v ", Match.team2)',
+			'winner' => 'IF(team1_result > team2_result, "team1", IF(team1_result < team2_result, "team2", "draw"))',
+			'result' => 'CONCAT(team1_result, " - ", team2_result)'
+	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
