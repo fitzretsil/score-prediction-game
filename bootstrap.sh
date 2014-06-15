@@ -3,7 +3,7 @@
 apt-get update
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
-apt-get install -y apache2 php5 memcached php5-memcached mysql-server
+apt-get install -y apache2 php5 memcached php5-memcached mysql-server php5-mysql
 rm -rf /var/www
 ln -s /vagrant /var/www
 sudo a2enmod rewrite
