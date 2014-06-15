@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
 apt-get update
-apt-get install -y apache2 php5 memcached php5-memcached
+sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
+sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
+apt-get install -y apache2 php5 memcached php5-memcached mysql-server
 rm -rf /var/www
 ln -s /vagrant /var/www
 sudo a2enmod rewrite
 sudo sed 's/AllowOverride None/AllowOverride All/' /etc/apache2/sites-available/default > /etc/apache2/sites-available/default
 sudo service apache2 restart
+mysql -u root -pyour_password < /vagrant/setup.sql
