@@ -22,8 +22,10 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+CakePlugin::load('DebugKit');
+
 // Setup a 'default' cache configuration for use in the application.
-Cache::config('default', array('engine' => 'File'));
+Cache::config('default', array('engine' => 'Memcached'));
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
