@@ -36,6 +36,7 @@ class MatchesController extends AppController {
 		if (!$this->Match->exists($id)) {
 			throw new NotFoundException(__('Invalid match'));
 		}
+		$this->Match->recursive = 2;
 		$options = array('conditions' => array('Match.' . $this->Match->primaryKey => $id));
 		$this->set('match', $this->Match->find('first', $options));
 	}

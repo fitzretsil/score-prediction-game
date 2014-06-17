@@ -29,31 +29,6 @@ class Prediction extends AppModel {
 	public $virtualFields = array(
 			'winner' => 'IF(team1_score > team2_score, "team1", IF(team1_score < team2_score, "team2", "draw"))',
 			'score' => 'CONCAT(team1_score, " - ", team2_score)',
-// 			'points' => 'IF(
-// 				CONCAT(team1_score, " - ", team2_score) = CONCAT(Match.team1_result, " - ", Match.team2_result), 
-// 				3, 
-// 				IF(
-// 					IF(
-// 						team1_score > team2_score, 
-// 						"team1", 
-// 						IF(
-// 							team1_score < team2_score, 
-// 							"team2", 
-// 							"draw"
-// 						)
-// 					) = IF(
-// 						Match.team1_result > Match.team2_result, 
-// 						"team1", 
-// 						IF(
-// 							Match.team1_result < Match.team2_result, 
-// 							"team2", 
-// 							"draw"
-// 						)
-// 					), 
-// 					1, 
-// 					0
-// 				)
-// 			)'
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -80,19 +55,24 @@ class Prediction extends AppModel {
 		)
 	);
 	
-	public function afterFind($results, $primary = false) {
-		parent::afterFind($results, $primary);
-		if ( $primary ) {
-			for ($i = 0; $i < sizeOf($results); $i++) {
-				if ( $results[$i]['Prediction']['score'] == $results[$i]['Match']['result'] ) {
-					$results[$i]['Prediction']['points'] = 3;
-				} elseif( $results[$i]['Prediction']['winner'] == $results[$i]['Match']['winner']) {
-					$results[$i]['Prediction']['points'] = 1;
-				} else {
-					$results[$i]['Prediction']['points'] = 0;
-				}
-			}
+	public function updatePoints( $match_id = null ) {
+		if ( $match_id == null ) {
+			return;
 		}
-		return $results;
+		
+		$predictions = $this->find( 'all', array( 'conditions' => array( 'Match.id' => $match_id ) ) );
+				
+		foreach ( $predictions as $prediction ) {
+			if ( $prediction['Prediction']['score'] == $prediction['Match']['result'] ) {
+				$prediction['Prediction']['points'] = 3;
+			} elseif ( $prediction['Prediction']['winner'] == $prediction['Match']['winner'] ) {
+				$prediction['Prediction']['points'] = 1;
+			} else {
+				$prediction['Prediction']['points'] = 0;
+			}
+			
+			$this->id = $prediction['Prediction']['id'];
+			$this->save( $prediction );
+		}
 	}
 }

@@ -64,7 +64,8 @@ class UsersController extends AppController {
  * @param string $id
  * @return void
  */
-	public function edit($id = null) {
+	public function edit() {
+		$id = $this->Session->read( 'Auth.User.id' );
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}
@@ -119,10 +120,18 @@ class UsersController extends AppController {
 	
 	public function isAuthorized($user) {
 		// Admin can access every action
-		if (isset($user['role']) && ( $this->action === 'index' || $this->action === 'view' ) ) {
+		if (isset($user['role']) && $user['role'] === 'admin') {
+			return true;
+		} elseif ( $this->action == 'index' ) {
+			return true;
+		} elseif ( $this->action == 'edit' ) {
+			return true;
+		} elseif ( $this->action == 'view' ) {
 			return true;
 		}
-		parent::isAuthorized($user);
+	
+		// Default deny
+		return false;
 	}
 	
 	public function logout() {

@@ -37,8 +37,8 @@ class Match extends AppModel {
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => true,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -47,8 +47,8 @@ class Match extends AppModel {
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => true,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -83,5 +83,11 @@ class Match extends AppModel {
 			'counterQuery' => ''
 		)
 	);
+	
+	public function afterSave( $created, $options = array() ) {
+		if ( $this->data['Match']['team1_result'] >= 0 && $this->data['Match']['team2_result'] >= 0 ) {
+			$this->Prediction->updatePoints( $this->data['Match']['id'] );
+		}
+	}
 
 }

@@ -2,24 +2,20 @@
 	<h2><?php echo __('Matches'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('team1'); ?></th>
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
 			<th><?php echo $this->Paginator->sort('team2'); ?></th>
-			<th><?php echo $this->Paginator->sort('team1_result'); ?></th>
-			<th><?php echo $this->Paginator->sort('team2_result'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($matches as $match): ?>
 	<tr>
-		<td><?php echo h($match['Match']['id']); ?>&nbsp;</td>
 		<td><?php echo h($match['Match']['team1']); ?>&nbsp;</td>
-		<td><?php echo h($match['Match']['team2']); ?>&nbsp;</td>
 		<td><?php echo h($match['Match']['team1_result']); ?>&nbsp;</td>
+		<td>vs</td>
 		<td><?php echo h($match['Match']['team2_result']); ?>&nbsp;</td>
-		<td><?php echo h($match['Match']['created']); ?>&nbsp;</td>
-		<td><?php echo h($match['Match']['modified']); ?>&nbsp;</td>
+		<td><?php echo h($match['Match']['team2']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $match['Match']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $match['Match']['id'])); ?>
@@ -31,7 +27,7 @@
 	<p>
 	<?php
 	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+	'format' => __('Page {:page} of {:pages}')
 	));
 	?>	</p>
 	<div class="paging">
@@ -42,11 +38,4 @@
 	?>
 	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Match'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Predictions'), array('controller' => 'predictions', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Prediction'), array('controller' => 'predictions', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+<?php echo $this->element('sidebar'); ?>

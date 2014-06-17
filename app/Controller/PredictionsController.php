@@ -14,6 +14,24 @@ class PredictionsController extends AppController {
  * @var array
  */
 	public $components = array('Paginator');
+	
+	public function isAuthorized($user) {
+		// Admin can access every action
+		if (isset($user['role']) && $user['role'] === 'admin') {
+			return true;
+		} elseif ( $this->action == 'index' ) {
+			return true;
+		} elseif ( $this->action == 'edit' ) {
+			return true;
+		} elseif ( $this->action == 'add' ) {
+			return true;
+		} elseif ( $this->action == 'delete' ) {
+			return true;
+		}
+	
+		// Default deny
+		return false;
+	}
 
 /**
  * index method
@@ -21,23 +39,9 @@ class PredictionsController extends AppController {
  * @return void
  */
 	public function index() {
+		$id = $this->Session->read('Auth.User.id');
 		$this->Prediction->recursive = 0;
-		$this->set('predictions', $this->Paginator->paginate());
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-		if (!$this->Prediction->exists($id)) {
-			throw new NotFoundException(__('Invalid prediction'));
-		}
-		$options = array('conditions' => array('Prediction.' . $this->Prediction->primaryKey => $id));
-		$this->set('prediction', $this->Prediction->find('first', $options));
+		$this->set('predictions', $this->Paginator->paginate( array( 'User.id' => $id ) ) );
 	}
 
 /**
@@ -55,11 +59,21 @@ class PredictionsController extends AppController {
 				$this->Session->setFlash(__('The prediction could not be saved. Please, try again.'));
 			}
 		}
-		$this->Prediction->virtualFields += $this->Prediction->Match->virtualFields;
 		
-		$users = $this->Prediction->User->find('list', array('fields' => array('User.id', 'User.username')));
-		$matches = $this->Prediction->Match->find('list', array('fields' => array('Match.id', 'Match.title')));
-		$this->set(compact('users','matches'));
+		$user = $this->Session->read('Auth.User.id');
+		$matches_predicted = $this->Prediction->find( 'list', array( 
+				'fields' => array( 'Prediction.match_id' ), 
+				'conditions' => array( 'Prediction.user_id' => $user ) 
+		) );
+		$matches = $this->Prediction->Match->find('list', array( 
+				'fields' => array('Match.id', 'Match.title'),
+				'conditions' => array( 'Match.team1_result' => '', 'NOT' => array( 'Match.id' => $matches_predicted ) ) )
+				);
+		if ( sizeOf( $matches ) == 0 ) {
+			$this->Session->setFlash(__('All matches have been predicted already'));
+			return $this->redirect(array('action' => 'index'));
+		}
+		$this->set(compact('user','matches'));
 	}
 
 /**

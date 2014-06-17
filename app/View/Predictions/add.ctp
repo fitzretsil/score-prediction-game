@@ -3,7 +3,7 @@
 	<fieldset>
 		<legend><?php echo __('Add Prediction'); ?></legend>
 	<?php
-		echo $this->Form->input('user_id');
+		echo $this->Form->hidden('user_id', array( 'value' => $user ) );
 		echo $this->Form->input('match_id');
 		echo $this->Form->input('team1_score');
 		echo $this->Form->input('team2_score');
