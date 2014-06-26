@@ -7,7 +7,7 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  */
 
-$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
+$cakeDescription = __d('score_prediction_game', 'Score Prediction Game');
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,7 +30,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 <body>
 	<div id="container">
 		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
+			<h1><?php echo $this->Html->link($cakeDescription, '/'); ?></h1>
 		</div>
 		<div id="content">
 
